@@ -4,7 +4,7 @@
 #### In this project we will be scraping the cricinfo world cup 2019 fixture webpage and extract all the matches details (team names and results) and store it in different forms (json, excel, pdf).
 ![cricinfo-19](https://raw.githubusercontent.com/Jas-Script/Web_Development/master/JavaScript%20Module/Cricinfo%20Scrapping%20Activity/pics%20for%20readme/8.PNG)
 
-#### In order to generate an excel file, pdf file and json file containing details of wolrd cup matches follow the steps:
+#### In order to generate an excel file, pdf file and json file containing details of world cup matches follow the steps:
 
 #### 1. Open Cricinfo_app.js in your editor 
 #### 2. Install the following libraries 
