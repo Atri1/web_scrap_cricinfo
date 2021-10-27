@@ -48,10 +48,10 @@ reponseKaPromise.then(function (response) {
         };
 
         let teamParas = matchdiv.querySelectorAll("div.name-detail > p.name");
-        match.t1 = teamParas[0].textContent;
-        match.t2 = teamParas[1].textContent;
+        match.t1 = teamParas[0].textContent; // team 1 from match
+        match.t2 = teamParas[1].textContent; // team 2 from match
 
-        let scoreSpans = matchdiv.querySelectorAll("div.score-detail > span.score");
+        let scoreSpans = matchdiv.querySelectorAll("div.score-detail > span.score"); // storing the scores from match
         if (scoreSpans.length == 2) {
             match.t1s = scoreSpans[0].textContent;
             match.t2s = scoreSpans[1].textContent;
@@ -63,39 +63,40 @@ reponseKaPromise.then(function (response) {
             match.t2s = "";
         }
 
-        let resultSpan = matchdiv.querySelector("div.status-text > span");
+        let resultSpan = matchdiv.querySelector("div.status-text > span"); // result from the match
         match.result = resultSpan.textContent;
 
         matches.push(match);
     }
 
-    let matchesJSON = JSON.stringify(matches); // done
-    fs.writeFileSync("matches.json", matchesJSON, "utf-8"); // done
+    let matchesJSON = JSON.stringify(matches); 
+    fs.writeFileSync("matches.json", matchesJSON, "utf-8"); // forming the json for all matches
 
-    let teams = []; // done
+    // restructuring the matches.json to teams.json to frame it in teams perspective. Earlier it was in match perspective
+    let teams = []; 
     for (let i = 0; i < matches.length; i++) {
-        putTeamInTeamsArrayIfMissing(teams, matches[i]); // done
+        putTeamInTeamsArrayIfMissing(teams, matches[i]); 
     }
 
     for (let i = 0; i < matches.length; i++) {
-        putMatchInAppropriateTeam(teams, matches[i]); // done
+        putMatchInAppropriateTeam(teams, matches[i]); 
     }
 
-    let teamsJSON = JSON.stringify(teams); // done
-    fs.writeFileSync("teams.json", teamsJSON, "utf-8"); // done
+    let teamsJSON = JSON.stringify(teams); 
+    fs.writeFileSync("teams.json", teamsJSON, "utf-8"); 
 
     createExcelFile(teams);
     createFolders(teams);
 })
 
 function createFolders(teams) {
-    fs.mkdirSync(args.dataFolderss);
+    fs.mkdirSync(args.dataFolderss);    //creating a folder called matches
     for (let i = 0; i < teams.length; i++) {
-        let teamFN = path.join(args.dataFolderss, teams[i].name);
-        fs.mkdirSync(teamFN);
+        let teamFN = path.join(args.dataFolderss, teams[i].name); //forming the path to the team name
+        fs.mkdirSync(teamFN); //creating a foler with that path name
 
         for (let j = 0; j < teams[i].matches.length; j++) {
-            let matchFileName = path.join(teamFN, teams[i].matches[j].vs + ".pdf");
+            let matchFileName = path.join(teamFN, teams[i].matches[j].vs + ".pdf");// creating path to pdf which contains details of the matches a team played against other teams: like ind vs pak, ind vs eng. So the pdf will be pak, eng under folder ind
             createScoreCard(teams[i].name, teams[i].matches[j], matchFileName);
         }
     }
@@ -110,7 +111,7 @@ function createScoreCard(teamName, match, matchFileName) {
 
     let bytesOfPDFTemplate = fs.readFileSync("Template.pdf");
     let pdfdocKaPromise = pdf.PDFDocument.load(bytesOfPDFTemplate);
-    pdfdocKaPromise.then(function(pdfdoc){
+    pdfdocKaPromise.then(function(pdfdoc){  //editing the pdf doc, positioning the text with respect to the template
         let page = pdfdoc.getPage(0);
 
         page.drawText(t1, {
@@ -158,7 +159,7 @@ function createExcelFile(teams) {
             fgColor : "00FF00"
         }
     });
-    for (let i = 0; i < teams.length; i++) {
+    for (let i = 0; i < teams.length; i++) {    //editing the excel sheet
         let sheet = wb.addWorksheet(teams[i].name);
 
         sheet.cell(1, 1).string("VS").style(hstyle);
